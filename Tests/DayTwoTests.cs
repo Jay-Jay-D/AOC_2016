@@ -13,7 +13,7 @@ public class DayTwoTests
         {
             new object[] { new Point(1,1),"ULL", 1 },
             new object[] { new Point(0,2),"RRDDD", 9 },
-            new object[] { new Point(0,2),"LURDL", 8 },
+            new object[] { new Point(2,0),"LURDL", 8 },
             new object[] { new Point(1,0),"UUUUD", 5 },
 
         };
@@ -29,6 +29,23 @@ public class DayTwoTests
         var decodedNumber = bathroomSecurity.DecodeLine(instruction);
         // Assert
         decodedNumber.Should().Be(expectedNumber);
+    }
 
+    [Fact]
+    public void TestDecodeInstructions()
+    {
+        // Given
+        var instructions = new[]
+        {
+            "ULL",
+            "RRDDD",
+            "LURDL",
+            "UUUUD"
+        };
+        var bathroomSecurity = new DayTwo.BathroomSecurity();
+        // When
+        var code = bathroomSecurity.GetCode(instructions);
+        // Then
+        code.Should().Be(1985);
     }
 }
