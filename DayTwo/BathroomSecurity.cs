@@ -1,6 +1,6 @@
 using DayOne;
+using System.Linq;
 namespace DayTwo;
-
 
 public class BathroomSecurity
 {
@@ -14,7 +14,7 @@ public class BathroomSecurity
         StartingPoint = startingPoint;
     }
 
-    public int DecodeLine(string instruction)
+    public string DecodeLine(string instruction)
     {
         int x, y = 0;
         foreach (var direction in instruction)
@@ -41,18 +41,15 @@ public class BathroomSecurity
             this.StartingPoint.X = x;
             this.StartingPoint.Y = y;
         }
-        return (StartingPoint.X + StartingPoint.Y - 1) + (2 - StartingPoint.Y) * 4;
+        int intCode = (StartingPoint.X + StartingPoint.Y - 1) + (2 - StartingPoint.Y) * 4;
+        return intCode.ToString();
     }
 
     public Point StartingPoint { get; }
 
-    public int GetCode(IEnumerable<string> instructions)
+    public string GetCode(IEnumerable<string> instructions)
     {
-        var code = 0;
-        foreach (var instruction in instructions)
-        {
-            code = (code * 10) + this.DecodeLine(instruction);
-        }
-        return code;
+        var code = instructions.Select(i => this.DecodeLine(i)).ToArray();
+        return string.Join("", code);
     }
 }
