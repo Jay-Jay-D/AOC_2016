@@ -11,28 +11,32 @@ public class DayTwoTests
     public static IEnumerable<object[]> InstructionLineCases =>
         new List<object[]>
         {
-            new object[] { new Point(1,1),"ULL", "1" },
-            new object[] { new Point(0,2),"RRDDD", "9" },
-            new object[] { new Point(2,0),"LURDL", "8" },
-            new object[] { new Point(1,0),"UUUUD", "5" },
-
+            new object[] { new Point(1,1),  false, "ULL",   "1" },
+            new object[] { new Point(0,2),  false, "RRDDD", "9" },
+            new object[] { new Point(2,0),  false, "LURDL", "8" },
+            new object[] { new Point(1,0),  false, "UUUUD", "5" },
+            new object[] { new Point(-1,1), true,  "ULL",   "5" },
+            new object[] { new Point(-1,1), true,  "RRDDD", "D" },
+            new object[] { new Point(2,0) , true,  "LURDL", "8" },
+            new object[] { new Point(1,0) , true,  "UUUUD", "5" },
         };
-
 
     [Theory]
     [MemberData(nameof(InstructionLineCases))]
-    public void TestDecodeNumber(Point startingPoint, string instruction, string expectedNumber)
+    public void TestDecodeNumber(Point startingPoint, bool extendedKeyboard, string instruction, string expectedNumber)
     {
         // Arrange
-        var bathroomSecurity = new DayTwo.BathroomSecurity(startingPoint);
+        var bathroomSecurity = new DayTwo.BathroomSecurity(startingPoint, extendedKeyboard);
         // Act
         var decodedNumber = bathroomSecurity.DecodeLine(instruction);
         // Assert
         decodedNumber.Should().Be(expectedNumber);
     }
 
-    [Fact]
-    public void TestDecodeInstructions()
+    [Theory]
+    [InlineData(false, "1985")]
+    [InlineData(true, "5DB3")]
+    public void TestDecodeInstructions(bool extendedKeyboard, string expectedCode)
     {
         // Given
         var instructions = new[]
@@ -42,10 +46,10 @@ public class DayTwoTests
             "LURDL",
             "UUUUD"
         };
-        var bathroomSecurity = new DayTwo.BathroomSecurity();
+        var bathroomSecurity = new DayTwo.BathroomSecurity(extendedKeyboard);
         // When
-        var code = bathroomSecurity.GetCode(instructions);
+        var actualCode = bathroomSecurity.GetCode(instructions);
         // Then
-        code.Should().Be("1985");
+        actualCode.Should().Be(expectedCode);
     }
 }
