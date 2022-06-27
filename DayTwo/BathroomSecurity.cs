@@ -4,14 +4,30 @@ namespace DayTwo;
 
 public class BathroomSecurity
 {
+    public Point CurrentPoint { get; }
+    private readonly bool _extendedKeyboard = false;
+
     public BathroomSecurity()
     {
-        StartingPoint = new Point(1, 1);
+        CurrentPoint = new Point(1, 1);
+    }
+
+    public BathroomSecurity(bool extendedKeyboard)
+    {
+        _extendedKeyboard = extendedKeyboard;
+        var xInit = extendedKeyboard ? -1 : 1;
+        CurrentPoint = new Point(xInit, 1);
     }
 
     public BathroomSecurity(Point startingPoint)
     {
-        StartingPoint = startingPoint;
+        CurrentPoint = startingPoint;
+    }
+
+    public BathroomSecurity(Point startingPoint, bool extendedKeyboard)
+    {
+        _extendedKeyboard = extendedKeyboard;
+        CurrentPoint = startingPoint;
     }
 
     public string DecodeLine(string instruction)
@@ -19,8 +35,8 @@ public class BathroomSecurity
         int x, y = 0;
         foreach (var direction in instruction)
         {
-            x = this.StartingPoint.X;
-            y = this.StartingPoint.Y;
+            x = this.CurrentPoint.X;
+            y = this.CurrentPoint.Y;
             switch (direction)
             {
                 case 'U':
@@ -38,14 +54,14 @@ public class BathroomSecurity
                 default:
                     break;
             }
-            this.StartingPoint.X = x;
-            this.StartingPoint.Y = y;
+            this.CurrentPoint.X = x;
+            this.CurrentPoint.Y = y;
         }
-        int intCode = (StartingPoint.X + StartingPoint.Y - 1) + (2 - StartingPoint.Y) * 4;
-        return intCode.ToString();
+        var intCode = ((CurrentPoint.X + CurrentPoint.Y - 1) + (2 - CurrentPoint.Y) * 4).ToString();
+        return intCode;
     }
 
-    public Point StartingPoint { get; }
+
 
     public string GetCode(IEnumerable<string> instructions)
     {
