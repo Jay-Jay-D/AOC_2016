@@ -12,9 +12,10 @@ public class Point
 
     public int Y { get; set; } = 0;
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? other)
     {
-        return obj is Point point &&
+        return other is not null &&
+               other is Point point &&
                X == point.X &&
                Y == point.Y;
     }

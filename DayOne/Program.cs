@@ -8,7 +8,7 @@ public class Program
         var noTimeForATaxicab = new NoTimeForATaxicab();
         var distance = noTimeForATaxicab.FollowInstructions(instructions);
         Console.WriteLine($"Part 1: distance is {distance}");
-        var locationVisitedTwice = noTimeForATaxicab.EasterBunnyHQ.GetDistanceToOrigin();
+        var locationVisitedTwice = noTimeForATaxicab.EasterBunnyHQ?.GetDistanceToOrigin();
         Console.WriteLine($"Part 2: distance to the first location you visit twice is {locationVisitedTwice}");
     }
 }

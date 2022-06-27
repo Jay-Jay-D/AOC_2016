@@ -31,7 +31,7 @@ public class DayOneTests
         //var actualDistance = DayOne.NoTimeForATaxicab.GetDistanceFromCoords(noTimeForATaxicab.EasterBunnyHQ);
         // Assert
         noTimeForATaxicab.EasterBunnyHQ.Should().NotBeNull();
-        Assert.Equal(expectedDistance, noTimeForATaxicab.EasterBunnyHQ.GetDistanceToOrigin());
+        Assert.Equal(expectedDistance, noTimeForATaxicab.EasterBunnyHQ?.GetDistanceToOrigin());
 
     }
 }
