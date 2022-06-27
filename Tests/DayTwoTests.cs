@@ -17,8 +17,8 @@ public class DayTwoTests
             new object[] { new Point(1,0),  false, "UUUUD", "5" },
             new object[] { new Point(-1,1), true,  "ULL",   "5" },
             new object[] { new Point(-1,1), true,  "RRDDD", "D" },
-            new object[] { new Point(2,0) , true,  "LURDL", "8" },
-            new object[] { new Point(1,0) , true,  "UUUUD", "5" },
+            new object[] { new Point(1,-1) , true,  "LURDL", "B" },
+            new object[] { new Point(1,0) , true,  "UUUUD", "3" },
         };
 
     [Theory]

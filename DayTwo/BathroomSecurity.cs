@@ -64,38 +64,33 @@ public class BathroomSecurity
     {
         var x = 0;
         var y = 0;
-        var minX = 0;
-        var minY = 0;
-        var maxX = 2;
-        var maxY = 2;
         var poitToCode = _extendedKeyboard ? _extendedKeyboardLayout : _basicKeyboardLayout;
         foreach (var direction in instruction)
         {
             x = CurrentPoint.X;
             y = CurrentPoint.Y;
-            maxY = _extendedKeyboard && x == 1 ? 3 : 2;
-            maxX = _extendedKeyboard && y == 1 ? 3 : 2;
-            minY = _extendedKeyboard && x == 1 ? -1 : 0;
-            minX = _extendedKeyboard && y == 1 ? -1 : 0;
             switch (direction)
             {
                 case 'U':
-                    y = Math.Min(maxY, y + 1);
+                    y += 1;
                     break;
                 case 'D':
-                    y = Math.Max(minY, y - 1);
+                    y -= 1;
                     break;
                 case 'R':
-                    x = Math.Min(maxX, x + 1);
+                    x += 1;
                     break;
                 case 'L':
-                    x = Math.Max(minX, x - 1);
+                    x -= 1;
                     break;
                 default:
                     break;
             }
-            CurrentPoint.X = x;
-            CurrentPoint.Y = y;
+            if (poitToCode.ContainsKey(new Point(x, y)))
+            {
+                CurrentPoint.X = x;
+                CurrentPoint.Y = y;
+            }
         }
         var intCode = poitToCode[CurrentPoint];
         return intCode;

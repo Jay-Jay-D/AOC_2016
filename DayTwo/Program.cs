@@ -11,5 +11,8 @@ public class Program
         var code = bathroomSecurity.GetCode(instructions);
         Console.WriteLine($"Part 1; code is {code}");
 
+        bathroomSecurity = new DayTwo.BathroomSecurity(true);
+        code = bathroomSecurity.GetCode(instructions);
+        Console.WriteLine($"Part 2; code is {code}");
     }
 }
