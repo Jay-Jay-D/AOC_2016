@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Xunit;
-using FluentAssertions;
 using DayOne;
 using DayTwo;
 

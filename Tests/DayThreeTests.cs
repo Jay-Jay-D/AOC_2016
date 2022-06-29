@@ -1,6 +1,3 @@
-
-using Xunit;
-using FluentAssertions;
 using DayThree;
 
 namespace DayThreeTests;

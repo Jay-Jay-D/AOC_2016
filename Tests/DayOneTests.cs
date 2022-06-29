@@ -1,7 +1,7 @@
-using Xunit;
-using FluentAssertions;
+global using Xunit;
+global using FluentAssertions;
+global using System.Collections.Generic;
 using System;
-using System.Collections.Generic;
 using DayOne;
 
 namespace DayOneTests;
