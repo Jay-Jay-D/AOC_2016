@@ -1,21 +1,11 @@
-﻿using System;
-using System.Security.Cryptography;
-using System.Text;
+﻿namespace DayFive;
 
-public class Test
+public class Program
 {
-    public static string ComputeMd5Hash(string message)
+    public static void Main(string[] args)
     {
-        using (MD5 md5 = MD5.Create())
-        {
-            byte[] input = Encoding.ASCII.GetBytes(message);
-            byte[] hash = md5.ComputeHash(input);
-            return Convert.ToHexString(hash);
-        }
-    }
-    public static void Main()
-    {
-        string message = "abc3231929";
-        Console.WriteLine(ComputeMd5Hash(message));
+        var doorId = "cxdnnyjw";
+        var password = NiceGameOfChess.GetPasswordFrom(doorId);
+        Console.WriteLine($"Part 1: the password fofr {doorId} is {password}");
     }
 }
