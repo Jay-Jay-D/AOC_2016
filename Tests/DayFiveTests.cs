@@ -4,17 +4,15 @@ namespace DayFiveTests;
 
 public class DayFiveTests
 {
-    [Fact]
-    public void GeneratePasswordTest()
+    [Theory]
+    //[InlineData("abc", false, "18f47a30")]
+    [InlineData("abc", true, "05ace8e3")]
+    public void GeneratePasswordTest(string doorId, bool levelTwo, string expectedPassword)
     {
-        // Given
-        var doorId = "abc";
-
         // When
-        var password = NiceGameOfChess.GetPasswordFrom(doorId);
+        var actualPassword = NiceGameOfChess.GetPasswordFrom(doorId, levelTwo);
 
         // Then
-        password.Should().Be("18f47a30");
-
+        actualPassword.Should().Be(expectedPassword);
     }
 }
