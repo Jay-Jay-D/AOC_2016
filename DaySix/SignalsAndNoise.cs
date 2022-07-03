@@ -34,20 +34,17 @@ public class SignalsAndNoise
         var signal = new char[lineLength];
         foreach (var charPositionCount in counter)
         {
-            var character = charPositionCount.Key;
             foreach (var positionCount in charPositionCount.Value)
             {
                 if ((isModifiedRepetitionCode && positionCount.Value < positionSum[positionCount.Key]) ||
                     (!isModifiedRepetitionCode && positionCount.Value > positionSum[positionCount.Key]))
                 {
                     positionSum[positionCount.Key] = positionCount.Value;
-                    signal[positionCount.Key] = character;
+                    signal[positionCount.Key] = charPositionCount.Key;
                 }
             }
         }
 
         return new string(signal);
     }
-
-
 }
