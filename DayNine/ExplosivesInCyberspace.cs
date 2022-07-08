@@ -7,13 +7,11 @@ public class ExplosivesInCyberspace
     public static object Decompress(string compressed)
     {
         var idx = 0;
-        var charsStart = 0;
         var charsCountToRepeat = 0;
         var repetitions = 0;
         var decompressed = new StringBuilder();
         while (idx < compressed.Length)
         {
-
             if (compressed[idx] == ' ')
             {
                 idx++;
@@ -24,7 +22,6 @@ public class ExplosivesInCyberspace
                 idx++; // the '(' character
                 var marker = new string(compressed.Skip(idx).TakeWhile(c => c != ')').ToArray());
                 idx += marker.Length + 1; // the ')' character
-                charsStart = idx;
                 var markerParts = marker.Split("x");
                 charsCountToRepeat = int.Parse(markerParts[0]);
                 repetitions = int.Parse(markerParts[1]);
