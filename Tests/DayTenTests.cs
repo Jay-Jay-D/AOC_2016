@@ -7,15 +7,6 @@ namespace DayTenTests;
 public class DayTenTests
 {
 
-    string[] _instructions = new[]
-        {
-            "value 5 goes to bot 2",
-            "bot 2 gives low to bot 1 and high to bot 0",
-            "value 3 goes to bot 1",
-            "bot 1 gives low to output 1 and high to bot 0",
-            "bot 0 gives low to output 2 and high to output 0",
-            "value 2 goes to bot 2",
-        };
 
     [Fact]
     public void CreateBotsFromInstructions()
@@ -70,15 +61,17 @@ public class DayTenTests
     [Fact]
     public void BotsReceiveChipsFromInstructions()
     {
-        var instructions = new[]{
-            "bot 1 gives low to bot 2 and high to bot 3",
+        // Given
+
+        var instructions = new[]
+        {
+           "bot 1 gives low to bot 2 and high to bot 3",
             "value 4 goes to bot 1",
             "value 5 goes to bot 1",
             "bot 2 gives low to bot 6 and high to bot 7",
             "value 8 goes to bot 2",
             "value 9 goes to bot 2",
         };
-
         var bot1 = new Bot(1, 2, 3);
         bot1.ReceiveChip(4);
         bot1.ReceiveChip(5);
@@ -98,4 +91,32 @@ public class DayTenTests
         actualBots.Should().Equal(expectedBots);
     }
 
+    [Fact]
+    public void OnceReadyBotsFollowInstructions()
+    {
+        // Given
+        var instructions = new[]
+        {
+           "bot 1 gives low to bot 2 and high to bot 3",
+            "value 4 goes to bot 1",
+            "value 5 goes to bot 1",
+            "bot 2 gives low to bot 6 and high to bot 7",
+            "bot 3 gives low to bot 8 and high to bot 9"
+        };
+        var expectedBot2 = new Bot(2, 6, 7);
+        expectedBot2.ReceiveChip(4);
+        
+        var expectedBot3 = new Bot(3, 8, 9);
+        expectedBot3.ReceiveChip(5);
+
+        var balanceBots = new BalanceBots(instructions);
+        balanceBots.InitializeBots();
+        // When
+        balanceBots.Activate();
+        // Then
+        var actualBot2 = balanceBots.GetBots().Single(b => b.BotNumber == 2);
+        var actualBot3 = balanceBots.GetBots().Single(b => b.BotNumber == 3);
+        expectedBot2.Should().BeEquivalentTo(actualBot2);
+        expectedBot2.Should().BeEquivalentTo(actualBot2);
+    }
 }

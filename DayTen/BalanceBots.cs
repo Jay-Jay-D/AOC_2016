@@ -20,15 +20,21 @@ public class BalanceBots
         {
             _bots.Add(ParseBotFromInstructions(botInstruction));
         }
+
         var valueInstructions = _instructions.Where(i => i.StartsWith("value"));
         foreach (var valueInstruction in valueInstructions)
         {
-            var parts = valueInstruction.Split(" ");
-            var chip = int.Parse(parts[1]);
-            var botNumber = int.Parse(parts[5]);
-            var bot = _bots.Single(b => b.BotNumber == botNumber);
-            bot.ReceiveChip(chip);
+            ParseValueFromInstructions(valueInstruction);
         }
+    }
+
+    private void ParseValueFromInstructions(string valueInstruction)
+    {
+        var parts = valueInstruction.Split(" ");
+        var chip = int.Parse(parts[1]);
+        var botNumber = int.Parse(parts[5]);
+        var bot = _bots.Single(b => b.BotNumber == botNumber);
+        bot.ReceiveChip(chip);
     }
 
     private static Bot ParseBotFromInstructions(string botInstruction)
@@ -49,6 +55,15 @@ public class BalanceBots
     public IEnumerable<Bot> GetBots()
     {
         return _bots;
+    }
+
+    public void Activate()
+    {
+        foreach (var bot in _bots.Where(b=>b.IsReady))
+        {
+            _bots.Single(b=>b.BotNumber==bot.LowTo ).ReceiveChip(bot.LowChip.Value);
+            _bots.Single(b=>b.BotNumber==bot.HighTo ).ReceiveChip(bot.HighChip.Value);
+        }
     }
 }
 
