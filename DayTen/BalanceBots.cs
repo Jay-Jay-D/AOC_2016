@@ -18,14 +18,28 @@ public class BalanceBots
         var botsInstructions = _instructions.Where(i => i.StartsWith("bot"));
         foreach (var botInstruction in botsInstructions)
         {
-            var parts = botInstruction.Split(" ");
-            var botNumber = int.Parse(parts[1]);
-            var lowTo = parts[5] == "bot" ? int.Parse(parts[6]) : int.MinValue;
-            var highTo = parts[10] == "bot" ? int.Parse(parts[11]) : int.MinValue;
-            _bots.Add(new Bot(botNumber, lowTo, highTo));
+            _bots.Add(ParseBotFromInstructions(botInstruction));
+        }
+        var valueInstructions = _instructions.Where(i => i.StartsWith("value"));
+        foreach (var valueInstruction in valueInstructions)
+        {
+            var parts = valueInstruction.Split(" ");
+            var chip = int.Parse(parts[1]);
+            var botNumber = int.Parse(parts[5]);
+            var bot = _bots.Single(b => b.BotNumber == botNumber);
+            bot.ReceiveChip(chip);
         }
     }
 
+    private static Bot ParseBotFromInstructions(string botInstruction)
+    {
+        var parts = botInstruction.Split(" ");
+        var botNumber = int.Parse(parts[1]);
+        var lowTo = parts[5] == "bot" ? int.Parse(parts[6]) : int.MinValue;
+        var highTo = parts[10] == "bot" ? int.Parse(parts[11]) : int.MinValue;
+        var bot = new Bot(botNumber, lowTo, highTo);
+        return bot;
+    }
 
     public int FindBotCompared(int v1, int v2)
     {
@@ -55,6 +69,13 @@ public class Bot
         HighTo = highTo;
     }
 
+    public Bot(int botNumber)
+    {
+        BotNumber = botNumber;
+        LowTo = int.MinValue;
+        HighTo = int.MinValue;
+    }
+
     public void ReceiveChip(int v)
     {
         if (!LowChip.HasValue)
@@ -66,13 +87,10 @@ public class Bot
             HighChip = LowChip;
             LowChip = v;
         }
-
-
         else if (!HighChip.HasValue)
         {
             HighChip = v;
         }
-
     }
 
     public override bool Equals(object? obj)
