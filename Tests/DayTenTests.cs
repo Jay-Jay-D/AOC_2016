@@ -36,63 +36,26 @@ public class DayTenTests
     }
 
     [Fact]
-    public void BotIsNotReadyUntilHaveTwoChips()
-    {
-        // Given
-        
-    
+    public void NewBotsAreNotReady()
+    {    
         // When
-    
+        var bot = new Bot(1,2,3);
         // Then
+        bot.IsReady.Should().BeFalse();
     }
 
     [Fact]
-    public void BotIsNotReadyUntilHaveTwoChips()
+    public void BotsAreReadyWhenHaveTwoChips()
     {
         // Given
-
-    
+        var bot = new Bot(1,2,3);
         // When
-    
+        bot.ReceiveChip(9);
+        bot.IsReady.Should().BeFalse();
+        bot.ReceiveChip(7);
         // Then
-    }
-
-    [Fact(Skip = "Not implemented yet")]
-    public void BotsReceiveChips()
-    {
-        // Given
-        var instructions = new []{
-            "value 3 goes to bot 1",
-            "value 5 goes to bot 1",
-            "value 7 goes to bot 2",
-            "value 11 goes to bot 2",
-        };
-
-        var bot1 = new Bot(1,int.MinValue,int.MinValue);
-        bot1.ReceiveChip(3);
-        bot1.ReceiveChip(5);
-
-        var bot2 = new Bot(1,int.MinValue,int.MinValue);
-        bot2.ReceiveChip(7);
-        bot2.ReceiveChip(11);
-
-        var expectedBots = new[]{bot1, bot2};
-        var balanceBots = new BalanceBots(_instructions);
-        // When
-        balanceBots.InitializeBots();
-        // Then
-        var actualBots = balanceBots.GetBots().ToArray();
-        actualBots.Should().Equal(expectedBots);
-    }
-
-    [Fact(Skip = "Not implemented yet")]
-    public void FindBotTest()
-    {
-        // Given
-        var balanceBots = new BalanceBots(_instructions);
-        // When
-        var actualBot = balanceBots.FindBotCompared(61, 17);
-        // Then
-        actualBot.Should().Be(2);
+        bot.IsReady.Should().BeTrue();
+        bot.HighChip.Should().Be(9);
+        bot.LowChip.Should().Be(7);
     }
 }

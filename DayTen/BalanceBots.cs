@@ -43,16 +43,36 @@ public class Bot
     public int BotNumber { get; private set; }
     public int LowTo { get; set; }
     public int HighTo { get; set; }
-    public bool IsReady { get; set; } = false;
-    public Nullable<int> LowChip { get; set; } = null;
-    public Nullable<int> HighChip { get; set; } = null;
-    
+    public bool IsReady { get => LowChip.HasValue && HighChip.HasValue; }
+    public Nullable<int> LowChip { get; private set; }
+    public Nullable<int> HighChip { get; private set; }
+
 
     public Bot(int botNumber, int lowTo, int highTo)
     {
         BotNumber = botNumber;
         LowTo = lowTo;
         HighTo = highTo;
+    }
+
+    public void ReceiveChip(int v)
+    {
+        if (!LowChip.HasValue)
+        {
+            LowChip = v;
+        }
+        else if (LowChip > v)
+        {
+            HighChip = LowChip;
+            LowChip = v;
+        }
+
+
+        else if (!HighChip.HasValue)
+        {
+            HighChip = v;
+        }
+
     }
 
     public override bool Equals(object? obj)
