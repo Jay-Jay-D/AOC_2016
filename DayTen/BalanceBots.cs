@@ -1,12 +1,9 @@
-using System.Text.RegularExpressions;
-using System;
-
 namespace DayTen;
 
 public class BalanceBots
 {
     IEnumerable<string> _instructions;
-    List<Bot> _bots = new List<Bot>();
+    Dictionary<int, Bot> _bots = new Dictionary<int, Bot>();
 
     public BalanceBots(IEnumerable<string> instructions)
     {
@@ -18,7 +15,7 @@ public class BalanceBots
         var botsInstructions = _instructions.Where(i => i.StartsWith("bot"));
         foreach (var botInstruction in botsInstructions)
         {
-            _bots.Add(ParseBotFromInstructions(botInstruction));
+            ParseBotFromInstructions(botInstruction);
         }
 
         var valueInstructions = _instructions.Where(i => i.StartsWith("value"));
@@ -28,25 +25,24 @@ public class BalanceBots
         }
     }
 
-    private void ParseValueFromInstructions(string valueInstruction)
-    {
-        var parts = valueInstruction.Split(" ");
-        var chip = int.Parse(parts[1]);
-        var botNumber = int.Parse(parts[5]);
-        var bot = _bots.Single(b => b.BotNumber == botNumber);
-        bot.ReceiveChip(chip);
-    }
-
-    private static Bot ParseBotFromInstructions(string botInstruction)
+    private void ParseBotFromInstructions(string botInstruction)
     {
         var parts = botInstruction.Split(" ");
         var botNumber = int.Parse(parts[1]);
         var lowTo = parts[5] == "bot" ? int.Parse(parts[6]) : int.MinValue;
         var highTo = parts[10] == "bot" ? int.Parse(parts[11]) : int.MinValue;
-        var bot = new Bot(botNumber, lowTo, highTo);
-        return bot;
+        _bots[botNumber] = new Bot(botNumber, lowTo, highTo);
     }
 
+
+    private void ParseValueFromInstructions(string valueInstruction)
+    {
+        var parts = valueInstruction.Split(" ");
+        var chip = int.Parse(parts[1]);
+        var botNumber = int.Parse(parts[5]);
+       _bots[botNumber].ReceiveChip(chip);
+    }
+   
     public int FindBotCompared(int v1, int v2)
     {
         throw new NotImplementedException();
@@ -54,15 +50,15 @@ public class BalanceBots
 
     public IEnumerable<Bot> GetBots()
     {
-        return _bots;
+        return _bots.Values;
     }
 
     public void Activate()
     {
-        foreach (var bot in _bots.Where(b=>b.IsReady))
+        foreach (var bot in _bots.Select(kvp=>kvp.Value).Where(b=>b.IsReady))
         {
-            _bots.Single(b=>b.BotNumber==bot.LowTo ).ReceiveChip(bot.LowChip.Value);
-            _bots.Single(b=>b.BotNumber==bot.HighTo ).ReceiveChip(bot.HighChip.Value);
+            _bots[bot.LowTo].ReceiveChip(bot.LowChip.Value);
+            _bots[bot.HighTo].ReceiveChip(bot.HighChip.Value);
         }
     }
 }
