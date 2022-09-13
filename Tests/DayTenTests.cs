@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using DayTen;
 
@@ -62,15 +63,14 @@ public class DayTenTests
     public void BotsReceiveChipsFromInstructions()
     {
         // Given
-
         var instructions = new[]
         {
            "bot 1 gives low to bot 2 and high to bot 3",
             "value 4 goes to bot 1",
             "value 5 goes to bot 1",
             "bot 2 gives low to bot 6 and high to bot 7",
-            "value 8 goes to bot 2",
             "value 9 goes to bot 2",
+            "value 8 goes to bot 2",
         };
         var bot1 = new Bot(1, 2, 3);
         bot1.ReceiveChip(4);
@@ -92,7 +92,7 @@ public class DayTenTests
     }
 
     [Fact]
-    public void OnceReadyBotsFollowInstructions()
+    public void OnceReadyBotsFollowInstructionsAndResetState()
     {
         // Given
         var instructions = new[]
@@ -114,9 +114,29 @@ public class DayTenTests
         // When
         balanceBots.Activate();
         // Then
-        var actualBot2 = balanceBots.GetBots().Single(b => b.BotNumber == 2);
-        var actualBot3 = balanceBots.GetBots().Single(b => b.BotNumber == 3);
+        var actualBot2 = balanceBots[2];
+        var actualBot3 = balanceBots[3];
         expectedBot2.Should().BeEquivalentTo(actualBot2);
         expectedBot2.Should().BeEquivalentTo(actualBot2);
+        balanceBots[1].IsReady.Should().BeFalse();
+    }
+
+    [Fact]
+    public void BotsReceiveInstructionToGiveChipToOutput()
+    {
+        // Given
+        var instructions = new[]
+        {
+            "bot 0 gives low to output 2 and high to output 0",
+            "value 4 goes to bot 0",
+            "value 5 goes to bot 0"
+        };
+        var balanceBots = new BalanceBots(instructions);
+        balanceBots.InitializeBots();
+        // When
+        var activation = () => balanceBots.Activate();
+        // Then
+        activation.Should().NotThrow<Exception>();
+        balanceBots[0].IsReady.Should().BeFalse();
     }
 }
