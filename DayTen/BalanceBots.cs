@@ -49,7 +49,7 @@ public class BalanceBots
 
     public IEnumerable<Bot> GetBots()
     {
-        return _bots.Values;
+        return _bots.Values.OrderBy(b => b.BotNumber);
     }
 
     public bool Activate()
@@ -61,14 +61,26 @@ public class BalanceBots
         {
             // if bots are ready LowChip and HighChip porpeties are not null.
 #pragma warning( disable : 8629 )
-            if (bot.LowTo != int.MinValue)
+            if (bot.LowTo.Item1 == "bot")
             {
-                _bots[bot.LowTo.Value].ReceiveChip(bot.LowChip.Value);
+                _bots[bot.LowTo.Item2].ReceiveChip(bot.LowChip.Value);
             }
-            if (bot.LowTo != int.MinValue)
+            else
             {
-                _bots[bot.HighTo.Value].ReceiveChip(bot.HighChip.Value);
+                _outputBins[bot.LowTo.Item2] = bot.LowChip.Value;
             }
+
+            if (bot.LowTo.Item1 == "bot")
+            {
+                _bots[bot.HighTo.Item2].ReceiveChip(bot.HighChip.Value);
+            }
+            else
+            {
+                _outputBins[bot.HighTo.Item2] = bot.HighChip.Value;
+            }
+
+
+
             _book.Add(new Tuple<int, int, int>(bot.BotNumber, bot.LowChip.Value, bot.HighChip.Value));
             bot.Reset();
         }

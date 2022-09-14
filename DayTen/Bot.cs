@@ -43,8 +43,8 @@ public class Bot
     {
         return obj is Bot bot &&
                BotNumber == bot.BotNumber &&
-               LowTo == bot.LowTo &&
-               HighTo == bot.HighTo &&
+               LowTo.Equals(bot.LowTo) &&
+               HighTo.Equals(bot.HighTo) &&
                IsReady == bot.IsReady;
     }
 

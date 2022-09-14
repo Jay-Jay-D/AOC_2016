@@ -13,9 +13,9 @@ public class DayTenTests
         // Given
         var expectedBots = new[]
         {
-            new Bot(2,new("bot", 1),new("bot", 0)),
+            new Bot(0,new("output", 2),new("output", 0)),
             new Bot(1,new("output", 1),new("bot", 0)),
-            new Bot(0,new("output", 2),new("output", 2))
+            new Bot(2,new("bot", 1),new("bot", 0))
         };
 
         var instructions = new[]
@@ -80,7 +80,7 @@ public class DayTenTests
         // When
         var balanceBots = new BalanceBots(instructions);
         // Then
-        var actualBots = balanceBots.GetBots().OrderBy(b => b.BotNumber).ToArray();
+        var actualBots = balanceBots.GetBots().ToArray();
         actualBots[0].IsReady.Should().BeTrue();
         actualBots[1].IsReady.Should().BeTrue();
         actualBots.Should().Equal(expectedBots);
