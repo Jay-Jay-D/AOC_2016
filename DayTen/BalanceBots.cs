@@ -42,7 +42,7 @@ public class BalanceBots
         var parts = valueInstruction.Split(" ");
         var chip = int.Parse(parts[1]);
         var botNumber = int.Parse(parts[5]);
-       _bots[botNumber].ReceiveChip(chip);
+        _bots[botNumber].ReceiveChip(chip);
     }
 
     public IEnumerable<Bot> GetBots()
@@ -50,7 +50,7 @@ public class BalanceBots
         return _bots.Values;
     }
 
-    public void Activate()
+    public bool Activate()
     {
         var botsReady = _bots.Select(kvp => kvp.Value)
                              .Where(b => b.IsReady)
@@ -69,12 +69,18 @@ public class BalanceBots
             _book.Add(new Tuple<int, int, int>(bot.BotNumber, bot.LowChip.Value, bot.HighChip.Value));
             bot.Reset();
         }
+        return botsReady.Any();
     }
 
     public int WhichBotCompared(int chip1, int chip2)
     {
         var lowChip = Math.Min(chip1, chip2);
         var highChip = Math.Max(chip1, chip2);
-        return _book.Single(b=> b.Item2==lowChip && b.Item3==highChip).Item1;
+        return _book.Single(b => b.Item2 == lowChip && b.Item3 == highChip).Item1;
+    }
+
+    public void Run()
+    {
+        while (Activate()) { }
     }
 }

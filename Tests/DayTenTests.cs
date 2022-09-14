@@ -83,7 +83,7 @@ public class DayTenTests
         // When
         balanceBots.InitializeBots();
         // Then
-        var actualBots = balanceBots.GetBots().OrderBy(b=>b.BotNumber).ToArray();
+        var actualBots = balanceBots.GetBots().OrderBy(b => b.BotNumber).ToArray();
         actualBots[0].IsReady.Should().BeTrue();
         actualBots[1].IsReady.Should().BeTrue();
         actualBots.Should().Equal(expectedBots);
@@ -103,7 +103,7 @@ public class DayTenTests
         };
         var expectedBot2 = new Bot(2, 6, 7);
         expectedBot2.ReceiveChip(4);
-        
+
         var expectedBot3 = new Bot(3, 8, 9);
         expectedBot3.ReceiveChip(5);
 
@@ -165,5 +165,26 @@ public class DayTenTests
         balanceBots.WhichBotCompared(1, 5).Should().Be(0);
         balanceBots.WhichBotCompared(1, 6).Should().Be(1);
         balanceBots.WhichBotCompared(4, 5).Should().Be(2);
+    }
+
+    [Fact]
+    public void IntegrationTest()
+    {
+        // Given
+        var instructions = new[]
+        {
+            "value 5 goes to bot 2",
+            "bot 2 gives low to bot 1 and high to bot 0",
+            "value 3 goes to bot 1",
+            "bot 1 gives low to output 1 and high to bot 0",
+            "bot 0 gives low to output 2 and high to output 0",
+            "value 2 goes to bot 2"
+        };
+        var balanceBots = new BalanceBots(instructions);
+        balanceBots.InitializeBots();
+        // When
+        balanceBots.Run();
+        // Then
+        balanceBots.WhichBotCompared(2, 5).Should().Be(2);
     }
 }
