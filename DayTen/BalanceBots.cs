@@ -5,6 +5,7 @@ public class BalanceBots
     IEnumerable<string> _instructions;
     Dictionary<int, Bot> _bots = new Dictionary<int, Bot>();
     public Bot this[int botNumber] => _bots[botNumber];
+    List<Tuple<int, int, int>> _book = new List<Tuple<int, int, int>>();
 
     public BalanceBots(IEnumerable<string> instructions)
     {
@@ -43,11 +44,6 @@ public class BalanceBots
         var botNumber = int.Parse(parts[5]);
        _bots[botNumber].ReceiveChip(chip);
     }
-   
-    public int FindBotCompared(int v1, int v2)
-    {
-        throw new NotImplementedException();
-    }
 
     public IEnumerable<Bot> GetBots()
     {
@@ -70,7 +66,15 @@ public class BalanceBots
             {
                 _bots[bot.HighTo].ReceiveChip(bot.HighChip.Value);
             }
+            _book.Add(new Tuple<int, int, int>(bot.BotNumber, bot.LowChip.Value, bot.HighChip.Value));
             bot.Reset();
         }
+    }
+
+    public int WhichBotCompared(int chip1, int chip2)
+    {
+        var lowChip = Math.Min(chip1, chip2);
+        var highChip = Math.Max(chip1, chip2);
+        return _book.Single(b=> b.Item2==lowChip && b.Item3==highChip).Item1;
     }
 }

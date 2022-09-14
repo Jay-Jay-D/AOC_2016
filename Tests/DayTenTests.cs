@@ -7,8 +7,6 @@ namespace DayTenTests;
 
 public class DayTenTests
 {
-
-
     [Fact]
     public void CreateBotsFromInstructions()
     {
@@ -138,5 +136,34 @@ public class DayTenTests
         // Then
         activation.Should().NotThrow<Exception>();
         balanceBots[0].IsReady.Should().BeFalse();
+        balanceBots[0].HighTo.Should().Be(int.MinValue);
+        balanceBots[0].LowTo.Should().Be(int.MinValue);
+    }
+
+    [Fact]
+    public void KeepsRecordsWhichBotComparedChips()
+    {
+        // Given
+        var instructions = new[]
+        {
+            "bot 0 gives low to bot 1 and high to bot 2",
+            "bot 1 gives low to bot 0 and high to bot 2",
+            "bot 2 gives low to bot 0 and high to bot 1",
+            "value 1 goes to bot 0",
+            "value 5 goes to bot 0",
+            "value 6 goes to bot 1",
+            "value 4 goes to bot 2",
+        };
+        var balanceBots = new BalanceBots(instructions);
+        balanceBots.InitializeBots();
+        // When
+        // bot 0 givex chips to bot 1 and 2
+        balanceBots.Activate();
+        // bot 1 and 2 activates
+        balanceBots.Activate();
+        // Then
+        balanceBots.WhichBotCompared(1, 5).Should().Be(0);
+        balanceBots.WhichBotCompared(1, 6).Should().Be(1);
+        balanceBots.WhichBotCompared(4, 5).Should().Be(2);
     }
 }
