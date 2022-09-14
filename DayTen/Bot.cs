@@ -3,14 +3,14 @@ namespace DayTen;
 public class Bot
 {
     public int BotNumber { get; private set; }
-    public int LowTo { get; private set; }
-    public int HighTo { get; private set; }
+    public Tuple<string, int> LowTo { get; private set; }
+    public Tuple<string, int> HighTo { get; private set; }
     public bool IsReady { get => LowChip.HasValue && HighChip.HasValue; }
-    public Nullable<int> LowChip { get; private set; }
-    public Nullable<int> HighChip { get; private set; }
+    public int? LowChip { get; private set; }
+    public int? HighChip { get; private set; }
 
 
-    public Bot(int botNumber, int lowTo, int highTo)
+    public Bot(int botNumber, Tuple<string, int> lowTo, Tuple<string, int> highTo)
     {
         BotNumber = botNumber;
         LowTo = lowTo;
@@ -20,8 +20,6 @@ public class Bot
     public Bot(int botNumber)
     {
         BotNumber = botNumber;
-        LowTo = int.MinValue;
-        HighTo = int.MinValue;
     }
 
     public void ReceiveChip(int v)

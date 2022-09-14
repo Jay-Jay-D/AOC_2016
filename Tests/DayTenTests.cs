@@ -13,9 +13,9 @@ public class DayTenTests
         // Given
         var expectedBots = new[]
         {
-            new Bot(2,1,0),
-            new Bot(1,int.MinValue,0),
-            new Bot(0,int.MinValue,int.MinValue)
+            new Bot(2,new("bot", 1),new("bot", 0)),
+            new Bot(1,new("output", 1),new("bot", 0)),
+            new Bot(0,new("output", 2),new("output", 2))
         };
 
         var instructions = new[]
@@ -25,7 +25,7 @@ public class DayTenTests
             "bot 0 gives low to output 2 and high to output 0"
         };
         // When
-        var balanceBots = new BalanceBots(instructions);        
+        var balanceBots = new BalanceBots(instructions);
         // Then
         var actualBots = balanceBots.GetBots().ToArray();
         actualBots.Should().Equal(expectedBots);
@@ -35,7 +35,7 @@ public class DayTenTests
     public void NewBotsAreNotReady()
     {
         // When
-        var bot = new Bot(1, 2, 3);
+        var bot = new Bot(1, new("bot", 2), new("bot", 3));
         // Then
         bot.IsReady.Should().BeFalse();
     }
@@ -44,7 +44,7 @@ public class DayTenTests
     public void BotsAreReadyWhenHaveTwoChips()
     {
         // Given
-        var bot = new Bot(1, 2, 3);
+        var bot = new Bot(1, new("bot", 2), new("bot", 3));
         // When
         bot.ReceiveChip(9);
         bot.IsReady.Should().BeFalse();
@@ -68,11 +68,11 @@ public class DayTenTests
             "value 9 goes to bot 2",
             "value 8 goes to bot 2",
         };
-        var bot1 = new Bot(1, 2, 3);
+        var bot1 = new Bot(1, new("bot", 2), new("bot", 3));
         bot1.ReceiveChip(4);
         bot1.ReceiveChip(5);
 
-        var bot2 = new Bot(2, 6, 7);
+        var bot2 = new Bot(2, new("bot", 6), new("bot", 7));
         bot2.ReceiveChip(8);
         bot2.ReceiveChip(9);
 
@@ -98,10 +98,10 @@ public class DayTenTests
             "bot 2 gives low to bot 6 and high to bot 7",
             "bot 3 gives low to bot 8 and high to bot 9"
         };
-        var expectedBot2 = new Bot(2, 6, 7);
+        var expectedBot2 = new Bot(2, new("bot", 6), new("bot", 7));
         expectedBot2.ReceiveChip(4);
 
-        var expectedBot3 = new Bot(3, 8, 9);
+        var expectedBot3 = new Bot(3, new("bot", 8), new("bot", 9));
         expectedBot3.ReceiveChip(5);
 
         var balanceBots = new BalanceBots(instructions);
@@ -131,8 +131,6 @@ public class DayTenTests
         // Then
         activation.Should().NotThrow<Exception>();
         balanceBots[0].IsReady.Should().BeFalse();
-        balanceBots[0].HighTo.Should().Be(int.MinValue);
-        balanceBots[0].LowTo.Should().Be(int.MinValue);
     }
 
     [Fact]
@@ -179,5 +177,28 @@ public class DayTenTests
         balanceBots.Run();
         // Then
         balanceBots.WhichBotCompared(2, 5).Should().Be(2);
+    }
+
+    [Fact(Skip = "WIP")]
+    public void KeepTrackOfChipsInOutputBin()
+    {
+        // Given
+        var instructions = new[]
+        {
+            "bot 1 gives low to output 0 and high to output 1",
+            "value 4 goes to bot 1",
+            "value 5 goes to bot 1",
+            "bot 2 gives low to output 2 and high to output 3",
+            "value 9 goes to bot 2",
+            "value 8 goes to bot 2",
+        };
+        var balanceBots = new BalanceBots(instructions);
+        // When
+        balanceBots.Run();
+        // Then
+        balanceBots.GetChipFromOutputBin(0).Should().Be(4);
+        balanceBots.GetChipFromOutputBin(1).Should().Be(5);
+        balanceBots.GetChipFromOutputBin(2).Should().Be(8);
+        balanceBots.GetChipFromOutputBin(3).Should().Be(9);
     }
 }

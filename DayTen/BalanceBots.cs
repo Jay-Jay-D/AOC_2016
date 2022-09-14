@@ -6,6 +6,7 @@ public class BalanceBots
     Dictionary<int, Bot> _bots = new Dictionary<int, Bot>();
     public Bot this[int botNumber] => _bots[botNumber];
     List<Tuple<int, int, int>> _book = new List<Tuple<int, int, int>>();
+    Dictionary<int, int> _outputBins = new Dictionary<int, int>();
 
     public BalanceBots(IEnumerable<string> instructions)
     {
@@ -32,8 +33,8 @@ public class BalanceBots
     {
         var parts = botInstruction.Split(" ");
         var botNumber = int.Parse(parts[1]);
-        var lowTo = parts[5] == "bot" ? int.Parse(parts[6]) : int.MinValue;
-        var highTo = parts[10] == "bot" ? int.Parse(parts[11]) : int.MinValue;
+        var lowTo = new Tuple<string, int>(parts[5], int.Parse(parts[6]));
+        var highTo = new Tuple<string, int>(parts[10], int.Parse(parts[11]));
         _bots[botNumber] = new Bot(botNumber, lowTo, highTo);
     }
 
@@ -59,13 +60,14 @@ public class BalanceBots
         foreach (var bot in botsReady)
         {
             // if bots are ready LowChip and HighChip porpeties are not null.
+#pragma warning( disable : 8629 )
             if (bot.LowTo != int.MinValue)
             {
-                _bots[bot.LowTo].ReceiveChip(bot.LowChip.Value);
+                _bots[bot.LowTo.Value].ReceiveChip(bot.LowChip.Value);
             }
             if (bot.LowTo != int.MinValue)
             {
-                _bots[bot.HighTo].ReceiveChip(bot.HighChip.Value);
+                _bots[bot.HighTo.Value].ReceiveChip(bot.HighChip.Value);
             }
             _book.Add(new Tuple<int, int, int>(bot.BotNumber, bot.LowChip.Value, bot.HighChip.Value));
             bot.Reset();
@@ -83,5 +85,10 @@ public class BalanceBots
     public void Run()
     {
         while (Activate()) { }
+    }
+
+    public object GetChipFromOutputBin(int v)
+    {
+        throw new NotImplementedException();
     }
 }
