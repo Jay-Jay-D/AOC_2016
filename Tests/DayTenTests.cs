@@ -179,7 +179,7 @@ public class DayTenTests
         balanceBots.WhichBotCompared(2, 5).Should().Be(2);
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact]
     public void KeepTrackOfChipsInOutputBin()
     {
         // Given

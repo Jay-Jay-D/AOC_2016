@@ -60,7 +60,7 @@ public class BalanceBots
         foreach (var bot in botsReady)
         {
             // if bots are ready LowChip and HighChip porpeties are not null.
-#pragma warning( disable : 8629 )
+            #pragma warning( disable : 8629 )
             if (bot.LowTo.Item1 == "bot")
             {
                 _bots[bot.LowTo.Item2].ReceiveChip(bot.LowChip.Value);
@@ -99,8 +99,8 @@ public class BalanceBots
         while (Activate()) { }
     }
 
-    public object GetChipFromOutputBin(int v)
+    public int GetChipFromOutputBin(int outputBin)
     {
-        throw new NotImplementedException();
+        return _outputBins[outputBin];
     }
 }
