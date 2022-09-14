@@ -10,9 +10,10 @@ public class BalanceBots
     public BalanceBots(IEnumerable<string> instructions)
     {
         _instructions = instructions;
+        InitializeBots();
     }
 
-    public void InitializeBots()
+    private void InitializeBots()
     {
         var botsInstructions = _instructions.Where(i => i.StartsWith("bot"));
         foreach (var botInstruction in botsInstructions)
