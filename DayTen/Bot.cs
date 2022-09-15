@@ -17,11 +17,6 @@ public class Bot
         HighTo = highTo;
     }
 
-    public Bot(int botNumber)
-    {
-        BotNumber = botNumber;
-    }
-
     public void ReceiveChip(int v)
     {
         if (!LowChip.HasValue)

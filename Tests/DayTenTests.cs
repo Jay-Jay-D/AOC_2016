@@ -201,4 +201,26 @@ public class DayTenTests
         balanceBots.GetChipFromOutputBin(2).Should().Be(8);
         balanceBots.GetChipFromOutputBin(3).Should().Be(9);
     }
+
+    [Fact]
+    public void BotsReceiveChipsFromOtherBots()
+    {
+         // Given
+        var instructions = new[]
+        {
+            "bot 1 gives low to bot 0 and high to bot 2",
+            "bot 2 gives low to output 0 and high to bot 0",
+            "value 4 goes to bot 1",
+            "value 5 goes to bot 1",
+            "value 9 goes to bot 2",
+            "bot 0 gives low to output 1 and high to output 4",
+        };
+        var balanceBots = new BalanceBots(instructions);
+        // When
+        balanceBots.Activate();
+        balanceBots.Activate();
+        // Then
+        balanceBots[0].LowChip.Should().Be(4);
+        balanceBots[0].HighChip.Should().Be(9);
+    }
 }

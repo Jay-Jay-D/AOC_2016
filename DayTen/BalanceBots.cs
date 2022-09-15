@@ -59,8 +59,8 @@ public class BalanceBots
                              .ToList();
         foreach (var bot in botsReady)
         {
-            // if bots are ready LowChip and HighChip porpeties are not null.
-            #pragma warning( disable : 8629 )
+            // if bots are ready LowChip and HighChip propeties are not null.
+            #pragma warning disable 8629 
             if (bot.LowTo.Item1 == "bot")
             {
                 _bots[bot.LowTo.Item2].ReceiveChip(bot.LowChip.Value);
@@ -70,7 +70,7 @@ public class BalanceBots
                 _outputBins[bot.LowTo.Item2] = bot.LowChip.Value;
             }
 
-            if (bot.LowTo.Item1 == "bot")
+            if (bot.HighTo.Item1 == "bot")
             {
                 _bots[bot.HighTo.Item2].ReceiveChip(bot.HighChip.Value);
             }
@@ -78,9 +78,7 @@ public class BalanceBots
             {
                 _outputBins[bot.HighTo.Item2] = bot.HighChip.Value;
             }
-
-
-
+            #pragma warning restore 8629 
             _book.Add(new Tuple<int, int, int>(bot.BotNumber, bot.LowChip.Value, bot.HighChip.Value));
             bot.Reset();
         }
