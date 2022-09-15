@@ -205,7 +205,7 @@ public class DayTenTests
     [Fact]
     public void BotsReceiveChipsFromOtherBots()
     {
-         // Given
+        // Given
         var instructions = new[]
         {
             "bot 1 gives low to bot 0 and high to bot 2",

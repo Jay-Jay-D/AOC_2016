@@ -1,13 +1,21 @@
+using System.Linq;
 namespace DayEleven;
 
 public class Elevator
 {
-    public int Floor { get; private set; }
-    public bool IsEmpty { get; set; } = true;
-
-    public Elevator(int floor)
+    public int CurrentFloor { get; private set; }
+    public bool IsEmpty
     {
-        Floor = floor;
+        get
+        {
+            return !Payload.Any();
+        }
+    }
+    public List<(string Type, string Material)> Payload { get; private set; } = new List<(string Type, string Material)>(2);
+
+    public Elevator(int currentFloor)
+    {
+        CurrentFloor = currentFloor;
     }
 
     public bool Move(int v)
@@ -17,13 +25,22 @@ public class Elevator
 
     public bool Load((string Type, string Material) load)
     {
-        IsEmpty = false;
-        return false;
+        var loaded = !Payload.Any();
+        if (!loaded && Payload.Count() == 1)
+        {
+            var combinedLoad = new[] { load, Payload.First() };
+            loaded = IsLoadCompatible(combinedLoad);
+        }
+        if (loaded)
+        {
+            Payload.Add(load);
+        }
+        return loaded;
     }
 
     public void Unload((string Type, string Material) load)
     {
-        IsEmpty = true;
+        Payload.Remove(load);
     }
 
     public bool Load((string Type, string Material)[] load)
@@ -32,18 +49,24 @@ public class Elevator
         {
             return false;
         }
-        IsEmpty = !IsLoadCompatible(load);
+        if (IsLoadCompatible(load))
+        {
+            Payload.AddRange(load);
+        }
         return !IsEmpty;
     }
 
     public void Unload((string Type, string Material)[] load)
     {
-        IsEmpty = true;
+        foreach (var l in load)
+        {
+            Payload.Remove(l);
+        }
     }
 
     bool IsLoadCompatible((string Type, string Material)[] load)
     {
-        if (load.Length==1) return true;
+        if (load.Length == 1) return true;
         if (load[0].Material == load[1].Material) return true;
         if (load[0].Type == load[1].Type) return true;
         return false;

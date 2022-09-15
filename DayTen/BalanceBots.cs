@@ -60,7 +60,7 @@ public class BalanceBots
         foreach (var bot in botsReady)
         {
             // if bots are ready LowChip and HighChip propeties are not null.
-            #pragma warning disable 8629 
+#pragma warning disable 8629
             if (bot.LowTo.Item1 == "bot")
             {
                 _bots[bot.LowTo.Item2].ReceiveChip(bot.LowChip.Value);
@@ -78,7 +78,7 @@ public class BalanceBots
             {
                 _outputBins[bot.HighTo.Item2] = bot.HighChip.Value;
             }
-            #pragma warning restore 8629 
+#pragma warning restore 8629
             _book.Add(new Tuple<int, int, int>(bot.BotNumber, bot.LowChip.Value, bot.HighChip.Value));
             bot.Reset();
         }
