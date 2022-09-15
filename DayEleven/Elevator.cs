@@ -32,7 +32,8 @@ public class Elevator
         {
             return false;
         }
-        return IsLoadCompatible(load);
+        IsEmpty = !IsLoadCompatible(load);
+        return !IsEmpty;
     }
 
     public void Unload((string Type, string Material)[] load)

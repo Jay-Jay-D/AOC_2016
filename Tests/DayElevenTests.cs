@@ -43,9 +43,10 @@ public class DayElevenTests
         // Given
         var elevator = new Elevator(1);
         var generator = (Type:"generator", Material: "hydrogen");
+        var load = new[]{generator};
     
         // When
-        elevator.Load(generator); 
+        elevator.Load(load); 
     
         // Then
         elevator.IsEmpty.Should().BeFalse();
@@ -57,10 +58,11 @@ public class DayElevenTests
         // Given
         var elevator = new Elevator(1);
         var generator = (Type:"generator", Material: "hydrogen");
-        elevator.Load(generator);
+        var load = new[]{generator};
+        elevator.Load(load);
 
         // When
-        elevator.Unload(generator);
+        elevator.Unload(load);
     
         // Then
         elevator.IsEmpty.Should().BeTrue();
