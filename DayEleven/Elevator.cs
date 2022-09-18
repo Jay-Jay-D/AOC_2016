@@ -4,6 +4,8 @@ namespace DayEleven;
 public class Elevator
 {
     public int CurrentFloor { get; private set; }
+    public int MaxFloor { get; private set; }
+
     public bool IsEmpty
     {
         get
@@ -13,14 +15,22 @@ public class Elevator
     }
     public List<(string Type, string Material)> Payload { get; private set; } = new List<(string Type, string Material)>(2);
 
-    public Elevator(int currentFloor)
+    public Elevator(int currentFloor, int maxFloor)
     {
         CurrentFloor = currentFloor;
+        MaxFloor = maxFloor;
     }
 
-    public bool Move(int v)
+    public Elevator(int currentFloor) : this(currentFloor, 4)
+    { }
+
+    public int Move(int floors)
     {
-        return !IsEmpty;
+        if (!IsEmpty)
+        {
+            CurrentFloor += floors;
+        }
+        return CurrentFloor;
     }
 
     public bool Load((string Type, string Material) load)

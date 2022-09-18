@@ -1,177 +1,152 @@
+using System;
 using DayEleven;
 
 namespace DayElevenTests;
 
-public class DayElevenTests
+public class DayElevenTests : IDisposable
 {
+    Elevator _elevator;
+    (string Type, string Material) _hydrogenGenerator = (Type: "generator", Material: "hydrogen");
+    (string Type, string Material) _hydrogenChip = (Type: "microchip", Material: "hydrogen");
+    (string Type, string Material)[] _hydrogenGeneratorAndChip;
+    (string Type, string Material) _lithiumChip = (Type: "microchip", Material: "lithium");
+
+    public DayElevenTests()
+    {
+        _elevator = new Elevator(1);
+        _hydrogenGeneratorAndChip = new[] { _hydrogenGenerator, _hydrogenChip };
+    }
+
+
+    public void Dispose()
+    { }
+
+    
     [Fact]
     public void ElevatorInitialStateIsEmpty()
     {
-        // Given
-        // When
-        var elevator = new Elevator(0);
-
-        // Then
-        elevator.IsEmpty.Should().BeTrue();
+        _elevator.IsEmpty.Should().BeTrue();
     }
 
     [Fact]
     public void ElevatorKnowsItsFloor()
     {
-        // Given
-        // When
-        var elevator = new Elevator(1);
-
-        // Then
-        elevator.CurrentFloor.Should().Be(1);
+        _elevator.CurrentFloor.Should().Be(1);
     }
 
     [Fact]
     public void EmptyElevatorCannotMove()
     {
-        // Given
-        // When
-        var elevator = new Elevator(1);
-
-        // Then
-        elevator.Move(1).Should().BeFalse();
+        _elevator.Move(1).Should().Be(1);
     }
 
     [Fact]
     public void AfterLoadingAnObjectElevatorIsNotEmpty()
     {
-        // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var load = new[] { generator };
-
         // When
-        elevator.Load(load);
+        _elevator.Load(_hydrogenChip);
 
         // Then
-        elevator.IsEmpty.Should().BeFalse();
+        _elevator.IsEmpty.Should().BeFalse();
     }
 
     [Fact]
     public void AfterLoadingAndUnloadignElevatorIsEmpty()
     {
         // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var load = new[] { generator };
-        elevator.Load(load);
+        _elevator.Load(_hydrogenGeneratorAndChip);
 
         // When
-        elevator.Unload(load);
+        _elevator.Unload(_hydrogenGeneratorAndChip);
 
         // Then
-        elevator.IsEmpty.Should().BeTrue();
+        _elevator.IsEmpty.Should().BeTrue();
     }
 
     [Fact]
     public void ElevatorCanLoadUpToTwoObjects()
     {
         // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var chip = (Type: "microchip", Material: "hydrogen");
-        var load = new[] { generator, chip };
-
         // When
-        elevator.Load(load).Should().BeTrue();
+        _elevator.Load(_hydrogenGeneratorAndChip).Should().BeTrue();
 
         // Then
-        elevator.Unload(load);
-        elevator.IsEmpty.Should().BeTrue();
-        load = new[] { generator, chip, chip };
-        elevator.Load(load).Should().BeFalse();
+        _elevator.Load(_hydrogenGenerator).Should().BeFalse();
     }
 
     [Fact]
     public void CannotLoadGeneratorWithMicrochipOfDifferentMaterial()
     {
         // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var chip = (Type: "microchip", Material: "lithium");
-        var load = new[] { generator, chip };
+        var load = new[] { _hydrogenGenerator, _lithiumChip };
 
         // When
         // Then
-        elevator.Load(load).Should().BeFalse();
+        _elevator.Load(load).Should().BeFalse();
     }
 
     [Fact]
     public void LoadedElevatorIsLoaded()
     {
         // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var chip = (Type: "microchip", Material: "hydrogen");
-        var load = new[] { generator, chip };
-
         // When
-        elevator.Load(load).Should().BeTrue();
+        _elevator.Load(_hydrogenGeneratorAndChip).Should().BeTrue();
         // Then
-        elevator.Payload.Should().Equal(load);
+        _elevator.Payload.Should().Equal(_hydrogenGeneratorAndChip);
     }
 
     [Fact]
     public void FullElevatorCanUnloadSingleObject()
     {
         // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var chip = (Type: "microchip", Material: "hydrogen");
-        var load = new[] { generator, chip };
-        elevator.Load(load).Should().BeTrue();
+        _elevator.Load(_hydrogenGeneratorAndChip).Should().BeTrue();
         // When
-        elevator.Unload(chip);
+        _elevator.Unload(_hydrogenChip);
         // Then
-        elevator.Payload.Should().NotBeEmpty().And.HaveCount(1);
-        elevator.Payload.Should().Contain(generator);
-    }
-
-    [Fact]
-    public void ElevatorCanLoadSingleObjectIfItIsCompatible()
-    {
-        // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var chip = (Type: "microchip", Material: "hydrogen");
-        var load = new[] { generator, chip };
-        elevator.Load(load).Should().BeTrue();
-        // When
-        elevator.Unload(chip);
-        // Then
-        elevator.Payload.Should().NotBeEmpty().And.HaveCount(1);
-        elevator.Payload.Should().Contain(generator);
+        _elevator.Payload.Should().NotBeEmpty().And.HaveCount(1);
+        _elevator.Payload.Should().Contain(_hydrogenGenerator);
     }
 
     [Fact]
     public void ElevatorCannotLoadSingleObjectIfItIsNotCompatible()
     {
         // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var chip = (Type: "microchip", Material: "lithium");
-        elevator.Load(generator).Should().BeTrue();
+        _elevator.Load(_hydrogenGenerator).Should().BeTrue();
         // When
         // Then
-        elevator.Load(chip).Should().BeFalse();
+        _elevator.Load(_lithiumChip).Should().BeFalse();
     }
 
     [Fact]
     public void FullElevatorCannotLoadSingleObject()
     {
         // Given
-        var elevator = new Elevator(1);
-        var generator = (Type: "generator", Material: "hydrogen");
-        var chip = (Type: "microchip", Material: "hydrogen");
-        var load = new[] { generator, chip };
-        elevator.Load(load).Should().BeTrue();
+        _elevator.Load(_hydrogenGeneratorAndChip).Should().BeTrue();
         // When
         // Then
-        elevator.Load(chip).Should().BeFalse();
+        _elevator.Load(_hydrogenChip).Should().BeFalse();
+    }
+
+    [Fact]
+    public void ElevatorKnowsHowManyFloorsThereAre()
+    {
+        // Given
+        var elevator = new Elevator(2, 6);
+        // When
+        // Then
+        elevator.CurrentFloor.Should().Be(2);
+        elevator.MaxFloor.Should().Be(6);
+    }
+
+    [Fact]
+    public void ElevatorMoves()
+    {
+        // Given
+        var elevator = new Elevator(2, 6);
+        elevator.Load(_hydrogenChip).Should().BeTrue();
+        // When
+        // Then
+        elevator.Move(3).Should().Be(5);
+        elevator.Move(-1).Should().Be(4);
     }
 }
