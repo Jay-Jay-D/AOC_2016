@@ -8,16 +8,23 @@ public class DayElevenFacilityTests : IDisposable
     Facility _facility;
     RtgComponent _hydrogenGenerator = new RtgComponent("generator", "hydrogen");
     RtgComponent _hydrogenChip = new RtgComponent("microchip", "hydrogen");
-    RtgComponent[] _hydrogenGeneratorAndChip;
+
     RtgComponent _lithiumChip = new RtgComponent("microchip", "lithium");
+
+    RtgComponent _lithiumGenerator = new RtgComponent("generator", "lithium");
+
+    RtgComponent[] _hydrogenGeneratorAndChip;
+    RtgComponent[] _lithiumGeneratorAndChip;
 
     public DayElevenFacilityTests()
     {
         _facility = new Facility();
         _hydrogenGeneratorAndChip = new[] { _hydrogenGenerator, _hydrogenChip };
+        _lithiumGeneratorAndChip = new[] { _lithiumGenerator, _lithiumChip };
     }
 
-    public void Dispose() { }
+    public void Dispose()
+    { }
 
     [Fact]
     public void FacilityHasFourFloors()
@@ -63,7 +70,7 @@ public class DayElevenFacilityTests : IDisposable
         facility[4].Payload.Should().BeEquivalentTo(_hydrogenGeneratorAndChip);
     }
 
-    [Fact(Skip = "WIP")]
+    [Fact]
     public void ElevatorCanLoadComponentFromFloor()
     {
         // Given
@@ -81,5 +88,70 @@ public class DayElevenFacilityTests : IDisposable
         facility[1].Payload.Should().BeEquivalentTo(new[] { _hydrogenChip });
         facility.Elevator.IsEmpty.Should().BeFalse();
         facility.Elevator.Payload.Should().BeEquivalentTo(new[] { _hydrogenGenerator });
+    }
+
+    [Fact]
+    public void ElevatorCanMoveComponentToAnotherFloor()
+    {
+        // Given
+        var floors = new Dictionary<int, Floor>{
+            {1, new Floor(_hydrogenGeneratorAndChip)},
+            {2, new Floor()},
+            {3, new Floor()},
+            {4, new Floor()},
+        };
+        var facility = new Facility(floors);
+        facility.LoadElevator(new[] { _hydrogenGenerator }).Should().BeTrue();
+        // When
+        // Then
+        facility.MoveElevator(1).Should().Be(2);
+        facility.Elevator.CurrentFloor.Should().Be(2);
+        facility.Elevator.Payload.Should().BeEquivalentTo(new[] { _hydrogenGenerator });
+    }
+
+    [Fact]
+    public void ElevatorCanNotMoveComponentToAnotherFloorIfThereIsComponentRisk()
+    {
+        /*
+         *  Elevator cannot move the hydrogen generator to the second floor because it'll
+         *  fry the lithium chip.
+         */
+
+        // Given
+        var floors = new Dictionary<int, Floor>{
+            {1, new Floor(_hydrogenGeneratorAndChip)},
+            {2, new Floor(new []{_lithiumChip})},
+            {3, new Floor()},
+            {4, new Floor()},
+        };
+        var facility = new Facility(floors);
+        facility.LoadElevator(new[] { _hydrogenGenerator }).Should().BeTrue();
+        // When
+        facility.MoveElevator(1).Should().Be(1);
+        // Then
+        facility.Elevator.CurrentFloor.Should().Be(1);
+        facility.Elevator.Payload.Should().BeEquivalentTo(new[] { _hydrogenGenerator });
+    }
+
+    [Fact]
+    public void ElevatorCanMoveComponentToAnotherFloorIfThereIsNotComponentRisk()
+    {
+        /*
+         *  Elevator can move the hydrogen generator to the second floor because 
+         *  the lithium chip will be connected to its own generator.
+         */
+
+        // Given
+        var floors = new Dictionary<int, Floor>{
+            {1, new Floor(_hydrogenGeneratorAndChip)},
+            {2, new Floor(_lithiumGeneratorAndChip)},
+            {3, new Floor()},
+            {4, new Floor()},
+        };
+        var facility = new Facility(floors);
+        facility.LoadElevator(new[] { _hydrogenGenerator }).Should().BeTrue();
+        // When
+        // Then
+        facility.MoveElevator(1).Should().Be(2);
     }
 }

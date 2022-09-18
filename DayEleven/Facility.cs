@@ -27,9 +27,32 @@ public class Facility
         var floor = Elevator.CurrentFloor;
         var componentsInFloor = components.All(c => Floors[floor].Payload.Contains(c));
         if (!componentsInFloor) return false;
+        var canLoad = Elevator.Load(components);
+        if (!canLoad) return false;
+        foreach (var component in components)
+        {
+            Floors[floor].Payload.Remove(component);
+        }
+        return true;
+    }
 
+    public int MoveElevator(int floorShift)
+    {
+        var targetFloor = Elevator.CurrentFloor + floorShift;
+        foreach (var elevatorComponent in Elevator.Payload)
+        {
+            foreach (var floorComponent in Floors[targetFloor].Payload)
+            {
+                if (!Facility.IsSafe(elevatorComponent, floorComponent)) return Elevator.CurrentFloor;
+            }
 
-        throw new NotImplementedException();
+        }
+        return Elevator.Move(floorShift);
+    }
+
+    private static bool IsSafe(RtgComponent elevatorComponent, RtgComponent floorComponent)
+    {
+        return false;
     }
 }
 
