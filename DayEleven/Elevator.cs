@@ -70,7 +70,7 @@ public class Elevator
     {
         foreach (var l in load)
         {
-            Payload.Remove(l);
+            Unload(l);
         }
     }
 

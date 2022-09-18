@@ -3,7 +3,7 @@ using DayEleven;
 
 namespace DayElevenTests;
 
-public class DayElevenTests : IDisposable
+public class DayElevenElevatorTests : IDisposable
 {
     Elevator _elevator;
     (string Type, string Material) _hydrogenGenerator = (Type: "generator", Material: "hydrogen");
@@ -11,7 +11,7 @@ public class DayElevenTests : IDisposable
     (string Type, string Material)[] _hydrogenGeneratorAndChip;
     (string Type, string Material) _lithiumChip = (Type: "microchip", Material: "lithium");
 
-    public DayElevenTests()
+    public DayElevenElevatorTests()
     {
         _elevator = new Elevator(1);
         _hydrogenGeneratorAndChip = new[] { _hydrogenGenerator, _hydrogenChip };
@@ -21,7 +21,7 @@ public class DayElevenTests : IDisposable
     public void Dispose()
     { }
 
-    
+
     [Fact]
     public void ElevatorInitialStateIsEmpty()
     {
