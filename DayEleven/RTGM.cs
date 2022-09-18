@@ -1,6 +1,7 @@
 namespace DayEleven;
 
-public struct RTGM{
+public struct RTGM
+{
     public string Type;
     public string Material;
 

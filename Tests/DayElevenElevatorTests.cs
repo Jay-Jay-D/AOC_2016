@@ -6,7 +6,7 @@ namespace DayElevenTests;
 public class DayElevenElevatorTests : IDisposable
 {
     Elevator _elevator;
-    RTGM _hydrogenGenerator =new RTGM("generator", "hydrogen");
+    RTGM _hydrogenGenerator = new RTGM("generator", "hydrogen");
     RTGM _hydrogenChip = new RTGM("microchip", "hydrogen");
     RTGM[] _hydrogenGeneratorAndChip;
     RTGM _lithiumChip = new RTGM("microchip", "lithium");

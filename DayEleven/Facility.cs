@@ -2,13 +2,12 @@ namespace DayEleven;
 
 public class Facility
 {
-    public Facility()
+    public Facility() : this(Enumerable.Range(1, 4).ToDictionary(k => k, v => new Floor()))
+    { }
+
+    public Facility(Dictionary<int, Floor> floors)
     {
-        Floors = new Dictionary<int, Floor>(4);
-        for (int i = 1; i < 5; i++)
-        {
-            Floors[i]=new Floor();
-        }
+        Floors = floors;
         Elevator = new Elevator(1);
     }
 
@@ -16,10 +15,25 @@ public class Facility
 
     public Elevator Elevator { get; set; }
 
-    public Floor this[int floor]=> Floors[floor];
+    public Floor this[int floor] => Floors[floor];
 }
 
 public class Floor
 {
-    public int Count = 0;
+    List<RTGM> _floorLoad;
+    public int Count => _floorLoad.Count;
+
+    public Floor()
+    {
+        _floorLoad = new List<RTGM>();
+    }
+
+    public Floor(IEnumerable<RTGM> RTGMs)
+    {
+        _floorLoad = RTGMs.ToList();
+    }
+
+    public bool IsEmpty => !_floorLoad.Any();
+
+    public List<RTGM> Load => _floorLoad;
 }
