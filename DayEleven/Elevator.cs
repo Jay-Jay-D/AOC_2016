@@ -1,4 +1,3 @@
-using System.Linq;
 namespace DayEleven;
 
 public class Elevator
@@ -13,7 +12,7 @@ public class Elevator
             return !Payload.Any();
         }
     }
-    public List<(string Type, string Material)> Payload { get; private set; } = new List<(string Type, string Material)>(2);
+    public List<RTGM> Payload { get; private set; } = new List<RTGM>(2);
 
     public Elevator(int currentFloor, int maxFloor)
     {
@@ -33,7 +32,7 @@ public class Elevator
         return CurrentFloor;
     }
 
-    public bool Load((string Type, string Material) load)
+    public bool Load(RTGM load)
     {
         var loaded = !Payload.Any();
         if (!loaded && Payload.Count() == 1)
@@ -48,12 +47,12 @@ public class Elevator
         return loaded;
     }
 
-    public void Unload((string Type, string Material) load)
+    public void Unload(RTGM load)
     {
         Payload.Remove(load);
     }
 
-    public bool Load((string Type, string Material)[] load)
+    public bool Load(RTGM[] load)
     {
         if (load.Length > 2)
         {
@@ -66,7 +65,7 @@ public class Elevator
         return !IsEmpty;
     }
 
-    public void Unload((string Type, string Material)[] load)
+    public void Unload(RTGM[] load)
     {
         foreach (var l in load)
         {
@@ -74,7 +73,7 @@ public class Elevator
         }
     }
 
-    bool IsLoadCompatible((string Type, string Material)[] load)
+    bool IsLoadCompatible(RTGM[] load)
     {
         if (load.Length == 1) return true;
         if (load[0].Material == load[1].Material) return true;

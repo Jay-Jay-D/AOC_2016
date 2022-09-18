@@ -5,8 +5,11 @@ namespace DayElevenTests;
 
 public class DayElevenFacilityTests : IDisposable
 {
+    Facility _facility;
+
     public DayElevenFacilityTests()
     {
+        _facility = new Facility();
     }
 
     public void Dispose() { }
@@ -14,23 +17,22 @@ public class DayElevenFacilityTests : IDisposable
     [Fact]
     public void FacilityHasFourFloors()
     {
-        // Given
-        // When
-        var facility = new Facility();
-        // Then
-        facility.Floors.Count.Should().Be(4);
+        _facility.Floors.Count.Should().Be(4);
     }
 
     [Fact]
     public void ElevatorStartAtFirstFloor()
     {
-        // Given
-        // When
-        var facility = new Facility();
-        // Then
-        facility.Elevator.Should().BeOfType<Elevator>();
-        facility.Elevator.CurrentFloor.Should().Be(1);
-        facility.Elevator.MaxFloor.Should().Be(4);
+        _facility.Elevator.Should().BeOfType<Elevator>();
+        _facility.Elevator.CurrentFloor.Should().Be(1);
+        _facility.Elevator.MaxFloor.Should().Be(4);
+    }
+
+    [Fact]
+    public void EmptyFloorAreEmpty()
+    {
+        _facility[1].Should().BeOfType<Floor>();
+        _facility[1].Count.Should().Be(0);
     }
 
 

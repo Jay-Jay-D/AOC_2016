@@ -6,10 +6,10 @@ namespace DayElevenTests;
 public class DayElevenElevatorTests : IDisposable
 {
     Elevator _elevator;
-    (string Type, string Material) _hydrogenGenerator = (Type: "generator", Material: "hydrogen");
-    (string Type, string Material) _hydrogenChip = (Type: "microchip", Material: "hydrogen");
-    (string Type, string Material)[] _hydrogenGeneratorAndChip;
-    (string Type, string Material) _lithiumChip = (Type: "microchip", Material: "lithium");
+    RTGM _hydrogenGenerator =new RTGM("generator", "hydrogen");
+    RTGM _hydrogenChip = new RTGM("microchip", "hydrogen");
+    RTGM[] _hydrogenGeneratorAndChip;
+    RTGM _lithiumChip = new RTGM("microchip", "lithium");
 
     public DayElevenElevatorTests()
     {

@@ -4,15 +4,22 @@ public class Facility
 {
     public Facility()
     {
-        Floors = new List<object>(4);
+        Floors = new Dictionary<int, Floor>(4);
         for (int i = 1; i < 5; i++)
         {
-            Floors.Add(new { });
+            Floors[i]=new Floor();
         }
         Elevator = new Elevator(1);
     }
 
-    public List<object> Floors { get; private set; }
+    public Dictionary<int, Floor> Floors { get; private set; }
 
     public Elevator Elevator { get; set; }
+
+    public Floor this[int floor]=> Floors[floor];
+}
+
+public class Floor
+{
+    public int Count = 0;
 }
