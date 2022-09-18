@@ -12,7 +12,7 @@ public class Elevator
             return !Payload.Any();
         }
     }
-    public List<RTGM> Payload { get; private set; } = new List<RTGM>(2);
+    public List<RtgComponent> Payload { get; private set; } = new List<RtgComponent>(2);
 
     public Elevator(int currentFloor, int maxFloor)
     {
@@ -32,7 +32,7 @@ public class Elevator
         return CurrentFloor;
     }
 
-    public bool Load(RTGM load)
+    public bool Load(RtgComponent load)
     {
         var loaded = !Payload.Any();
         if (!loaded && Payload.Count() == 1)
@@ -47,14 +47,14 @@ public class Elevator
         return loaded;
     }
 
-    public void Unload(RTGM load)
+    public void Unload(RtgComponent load)
     {
         Payload.Remove(load);
     }
 
-    public bool Load(RTGM[] load)
+    public bool Load(RtgComponent[] load)
     {
-        if (load.Length > 2)
+        if (load.Length + Payload.Count > 2)
         {
             return false;
         }
@@ -65,7 +65,7 @@ public class Elevator
         return !IsEmpty;
     }
 
-    public void Unload(RTGM[] load)
+    public void Unload(RtgComponent[] load)
     {
         foreach (var l in load)
         {
@@ -73,7 +73,7 @@ public class Elevator
         }
     }
 
-    bool IsLoadCompatible(RTGM[] load)
+    bool IsLoadCompatible(RtgComponent[] load)
     {
         if (load.Length == 1) return true;
         if (load[0].Material == load[1].Material) return true;

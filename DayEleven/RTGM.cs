@@ -1,11 +1,11 @@
 namespace DayEleven;
 
-public struct RTGM
+public struct RtgComponent
 {
     public string Type;
     public string Material;
 
-    public RTGM(string type, string material)
+    public RtgComponent(string type, string material)
     {
         Type = type;
         Material = material;

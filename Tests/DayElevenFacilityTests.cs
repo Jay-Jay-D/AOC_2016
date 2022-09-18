@@ -6,10 +6,10 @@ namespace DayElevenTests;
 public class DayElevenFacilityTests : IDisposable
 {
     Facility _facility;
-    RTGM _hydrogenGenerator = new RTGM("generator", "hydrogen");
-    RTGM _hydrogenChip = new RTGM("microchip", "hydrogen");
-    RTGM[] _hydrogenGeneratorAndChip;
-    RTGM _lithiumChip = new RTGM("microchip", "lithium");
+    RtgComponent _hydrogenGenerator = new RtgComponent("generator", "hydrogen");
+    RtgComponent _hydrogenChip = new RtgComponent("microchip", "hydrogen");
+    RtgComponent[] _hydrogenGeneratorAndChip;
+    RtgComponent _lithiumChip = new RtgComponent("microchip", "lithium");
 
     public DayElevenFacilityTests()
     {
@@ -56,10 +56,30 @@ public class DayElevenFacilityTests : IDisposable
         // Then
         facility[1].IsEmpty.Should().BeTrue();
         facility[2].IsEmpty.Should().BeFalse();
-        facility[2].Load.Should().BeEquivalentTo(new[] { _hydrogenChip });
+        facility[2].Payload.Should().BeEquivalentTo(new[] { _hydrogenChip });
         facility[3].IsEmpty.Should().BeFalse();
-        facility[3].Load.Should().BeEquivalentTo(new[] { _lithiumChip });
+        facility[3].Payload.Should().BeEquivalentTo(new[] { _lithiumChip });
         facility[4].IsEmpty.Should().BeFalse();
-        facility[4].Load.Should().BeEquivalentTo(_hydrogenGeneratorAndChip);
+        facility[4].Payload.Should().BeEquivalentTo(_hydrogenGeneratorAndChip);
+    }
+
+    [Fact(Skip = "WIP")]
+    public void ElevatorCanLoadComponentFromFloor()
+    {
+        // Given
+        var floors = new Dictionary<int, Floor>{
+            {1, new Floor(_hydrogenGeneratorAndChip)},
+            {2, new Floor()},
+            {3, new Floor()},
+            {4, new Floor()},
+        };
+        var facility = new Facility(floors);
+        // When
+        facility.LoadElevator(new[] { _hydrogenGenerator }).Should().BeTrue();
+        // Then
+        facility[1].IsEmpty.Should().BeFalse();
+        facility[1].Payload.Should().BeEquivalentTo(new[] { _hydrogenChip });
+        facility.Elevator.IsEmpty.Should().BeFalse();
+        facility.Elevator.Payload.Should().BeEquivalentTo(new[] { _hydrogenGenerator });
     }
 }

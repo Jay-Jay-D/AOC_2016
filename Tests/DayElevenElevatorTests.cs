@@ -6,10 +6,10 @@ namespace DayElevenTests;
 public class DayElevenElevatorTests : IDisposable
 {
     Elevator _elevator;
-    RTGM _hydrogenGenerator = new RTGM("generator", "hydrogen");
-    RTGM _hydrogenChip = new RTGM("microchip", "hydrogen");
-    RTGM[] _hydrogenGeneratorAndChip;
-    RTGM _lithiumChip = new RTGM("microchip", "lithium");
+    RtgComponent _hydrogenGenerator = new RtgComponent("generator", "hydrogen");
+    RtgComponent _hydrogenChip = new RtgComponent("microchip", "hydrogen");
+    RtgComponent[] _hydrogenGeneratorAndChip;
+    RtgComponent _lithiumChip = new RtgComponent("microchip", "lithium");
 
     public DayElevenElevatorTests()
     {
@@ -41,7 +41,7 @@ public class DayElevenElevatorTests : IDisposable
     }
 
     [Fact]
-    public void AfterLoadingAnObjectElevatorIsNotEmpty()
+    public void AfterLoadingAnComponentElevatorIsNotEmpty()
     {
         // When
         _elevator.Load(_hydrogenChip);
@@ -64,7 +64,7 @@ public class DayElevenElevatorTests : IDisposable
     }
 
     [Fact]
-    public void ElevatorCanLoadUpToTwoObjects()
+    public void ElevatorCanLoadUpToTwoComponents()
     {
         // Given
         // When
@@ -72,6 +72,7 @@ public class DayElevenElevatorTests : IDisposable
 
         // Then
         _elevator.Load(_hydrogenGenerator).Should().BeFalse();
+        _elevator.Load(_hydrogenGeneratorAndChip).Should().BeFalse();
     }
 
     [Fact]
@@ -96,7 +97,7 @@ public class DayElevenElevatorTests : IDisposable
     }
 
     [Fact]
-    public void FullElevatorCanUnloadSingleObject()
+    public void FullElevatorCanUnloadSingleComponent()
     {
         // Given
         _elevator.Load(_hydrogenGeneratorAndChip).Should().BeTrue();
@@ -108,7 +109,7 @@ public class DayElevenElevatorTests : IDisposable
     }
 
     [Fact]
-    public void ElevatorCannotLoadSingleObjectIfItIsNotCompatible()
+    public void ElevatorCannotLoadSingleComponentIfItIsNotCompatible()
     {
         // Given
         _elevator.Load(_hydrogenGenerator).Should().BeTrue();
@@ -118,7 +119,7 @@ public class DayElevenElevatorTests : IDisposable
     }
 
     [Fact]
-    public void FullElevatorCannotLoadSingleObject()
+    public void FullElevatorCannotLoadSingleComponent()
     {
         // Given
         _elevator.Load(_hydrogenGeneratorAndChip).Should().BeTrue();
