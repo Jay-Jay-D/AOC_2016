@@ -110,6 +110,23 @@ public class DayElevenFacilityTests : IDisposable
     }
 
     [Fact]
+    public void ElevatorIsEmptyAfterAllComponentsAreLoadedIntoElevator()
+    {
+        // Given
+        var floors = new Dictionary<int, Floor>{
+            {1, new Floor(_hydrogenGeneratorAndChip)},
+            {2, new Floor()},
+            {3, new Floor()},
+            {4, new Floor()},
+        };
+        var facility = new Facility(floors);
+        facility.LoadElevator(_hydrogenGeneratorAndChip).Should().BeTrue();
+        // When
+        facility[1].IsEmpty.Should().BeTrue();
+        // Then
+    }
+
+    [Fact]
     public void ElevatorCanNotMoveComponentToAnotherFloorIfThereIsComponentRisk()
     {
         /*
@@ -119,7 +136,7 @@ public class DayElevenFacilityTests : IDisposable
 
         // Given
         var floors = new Dictionary<int, Floor>{
-            {1, new Floor(_hydrogenGeneratorAndChip)},
+            {1, new Floor(new[]{_hydrogenGenerator})},
             {2, new Floor(new []{_lithiumChip})},
             {3, new Floor()},
             {4, new Floor()},
@@ -154,4 +171,6 @@ public class DayElevenFacilityTests : IDisposable
         // Then
         facility.MoveElevator(1).Should().Be(2);
     }
+
+
 }

@@ -39,9 +39,22 @@ public class Facility
     public int MoveElevator(int floorShift)
     {
         var targetFloor = Elevator.CurrentFloor + floorShift;
-        foreach (var elevatorComponent in Elevator.Payload)
+
+        var securedMaterial = Floors[targetFloor].Payload.Concat(Elevator.Payload)
+            .Select(c => c)
+            .GroupBy(c => c.Material)
+            .Where(gb => gb.Count() == 2)
+            .Select(gb => gb.Key)
+            .ToArray();
+
+        var unsafeElevatorComponents = Elevator.Payload
+            .Where(c => !Array.Exists(securedMaterial, scm => scm == c.Material));
+        var unsafeFloorComponents = Floors[targetFloor].Payload
+            .Where(c => !Array.Exists(securedMaterial, scm => scm == c.Material));
+
+        foreach (var elevatorComponent in unsafeElevatorComponents)
         {
-            foreach (var floorComponent in Floors[targetFloor].Payload)
+            foreach (var floorComponent in unsafeFloorComponents)
             {
                 if (!Facility.IsSafe(elevatorComponent, floorComponent)) return Elevator.CurrentFloor;
             }
