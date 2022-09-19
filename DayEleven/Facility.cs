@@ -82,4 +82,9 @@ public class Facility
         if (load[0].Type == load[1].Type) return true;
         return false;
     }
+
+    public object[] GetPossibleActions()
+    {
+        return new object[] { };
+    }
 }

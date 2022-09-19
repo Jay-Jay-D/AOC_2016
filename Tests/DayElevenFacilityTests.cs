@@ -117,12 +117,51 @@ public class DayElevenFacilityTests : IDisposable
             {4, new Floor()},
         };
         Console.WriteLine($"CheckSecurityRules() Running => {testCaseName}");
-        
+
         var facility = new Facility(floors);
         facility.LoadElevator(elevatorLoad).Should().BeTrue(testCaseName);
         // When
         // Then
         facility.MoveElevator(floorShit).Should().Be(expectedFloor, testCaseName);
+    }
+
+    [Fact]
+    public void WhenThereIsNoPossibleStateChange()
+    {
+        /*
+         *  In this case, there is no possible movement.
+         *  F4 .  .  .  .  .  
+         *  F3 .  .  .  .  .  
+         *  F2 .  HG .  .  .  
+         *  F1 E  .  .  .  LM
+         */
+        // Given
+        var floors = new Dictionary<int, Floor>
+            {
+                {1, new Floor(new[]{TestComponents.LithiumChip})},
+                {2, new Floor(new[]{TestComponents.HydrogenGenerator})},
+                {3, new Floor()},
+                {4, new Floor()},
+            };
+        var facility = new Facility(floors);
+        // When
+        var possibleActions = facility.GetPossibleActions();
+        // Then
+        possibleActions.Should().BeEmpty();
+    }
+
+    [Theory(Skip = "WIP")]
+    [ClassData(typeof(FacilityStatesCases))]
+    public void GetPossibleLoadsAndMovesFromAGivenState(Dictionary<int, Floor> initialFloorState,
+        RtgComponent[] expectedLoad,
+        int expectedMove)
+    {
+        // Given
+        var facility = new Facility(initialFloorState);
+        // When
+        var possibleActions = facility.GetPossibleActions();
+        // Then
+
     }
 }
 
@@ -216,4 +255,38 @@ public class SecurityRulesCaseGenerator : IEnumerable<object[]>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
+
+public class FacilityStatesCases : IEnumerable<object[]>
+{
+    private readonly List<object[]> _data = new List<object[]>
+    {
+        /*
+         *  In this case, only possible action is load Hydrgen Generator into
+         *  elevator and go up.
+         *  F4 .  .  .  .  .  
+         *  F3 .  .  .  .  .  
+         *  F2 .  HG .  .  .  
+         *  F1 E  .  HM .  LM
+         */
+        new object[]
+        {
+            new Dictionary<int, Floor>
+            {
+                {1, new Floor(new[]{TestComponents.HydrogenChip, TestComponents.LithiumChip})},
+                {2, new Floor(new[]{TestComponents.HydrogenGenerator})},
+                {3, new Floor()},
+                {4, new Floor()},
+            },
+            new[]{TestComponents.HydrogenChip},
+            1,
+            "There is a single possible action: load hydrogen chip and move it to the next floor"
+        }
+    };
+
+    public IEnumerator<object[]> GetEnumerator() => _data.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+
 #endregion Auxiliary classes
