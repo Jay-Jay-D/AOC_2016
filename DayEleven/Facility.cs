@@ -38,8 +38,20 @@ public class Facility
 
     public int MoveElevator(int floorShift)
     {
-        var targetFloor = Elevator.CurrentFloor + floorShift;
+        if (IsSafeToMoveElevator(floorShift))
+        {
+            return Elevator.Move(floorShift);
+        }
+        return Elevator.CurrentFloor;
+    }
 
+    private bool IsSafeToMoveElevator(int floorShift)
+    {
+        /*
+         * Critical assumption: there are only two component for each material, 
+         * a single generator and a single chip. 
+         */
+        var targetFloor = Elevator.CurrentFloor + floorShift;
         var securedMaterial = Floors[targetFloor].Payload.Concat(Elevator.Payload)
             .Select(c => c)
             .GroupBy(c => c.Material)
@@ -56,15 +68,18 @@ public class Facility
         {
             foreach (var floorComponent in unsafeFloorComponents)
             {
-                if (!Facility.IsSafe(elevatorComponent, floorComponent)) return Elevator.CurrentFloor;
+                if (!Facility.IsSafe(new[] { elevatorComponent, floorComponent })) return false;
             }
 
         }
-        return Elevator.Move(floorShift);
+        return true;
     }
 
-    private static bool IsSafe(RtgComponent elevatorComponent, RtgComponent floorComponent)
+    public static bool IsSafe(RtgComponent[] load)
     {
+        if (load.Length == 1) return true;
+        if (load[0].Material == load[1].Material) return true;
+        if (load[0].Type == load[1].Type) return true;
         return false;
     }
 }

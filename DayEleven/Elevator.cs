@@ -38,7 +38,7 @@ public class Elevator
         if (!loaded && Payload.Count() == 1)
         {
             var combinedLoad = new[] { load, Payload.First() };
-            loaded = IsLoadCompatible(combinedLoad);
+            loaded = Facility.IsSafe(combinedLoad);
         }
         if (loaded)
         {
@@ -58,7 +58,7 @@ public class Elevator
         {
             return false;
         }
-        if (IsLoadCompatible(load))
+        if (Facility.IsSafe(load))
         {
             Payload.AddRange(load);
         }
@@ -71,13 +71,5 @@ public class Elevator
         {
             Unload(l);
         }
-    }
-
-    bool IsLoadCompatible(RtgComponent[] load)
-    {
-        if (load.Length == 1) return true;
-        if (load[0].Material == load[1].Material) return true;
-        if (load[0].Type == load[1].Type) return true;
-        return false;
     }
 }
