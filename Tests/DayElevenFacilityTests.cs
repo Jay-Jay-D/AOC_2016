@@ -4,19 +4,7 @@ using DayEleven;
 
 namespace DayElevenTests;
 
-public static class TestComponents
-{
-    public static RtgComponent HydrogenGenerator = new RtgComponent("generator", "hydrogen");
-    public static RtgComponent HydrogenChip = new RtgComponent("microchip", "hydrogen");
 
-    public static RtgComponent LithiumChip = new RtgComponent("microchip", "lithium");
-
-    public static RtgComponent LithiumGenerator = new RtgComponent("generator", "lithium");
-
-    public static RtgComponent[] HydrogenGeneratorAndChip = new[] { HydrogenGenerator, HydrogenChip };
-    public static RtgComponent[] LithiumGeneratorAndChip = new[] { LithiumGenerator, LithiumChip };
-
-}
 
 public class DayElevenFacilityTests : IDisposable
 {
@@ -155,6 +143,17 @@ public class DayElevenFacilityTests : IDisposable
     }
 }
 
+#region  Auxiliary classes
+public static class TestComponents
+{
+    public static RtgComponent HydrogenGenerator = new RtgComponent("generator", "hydrogen");
+    public static RtgComponent HydrogenChip = new RtgComponent("microchip", "hydrogen");
+    public static RtgComponent LithiumChip = new RtgComponent("microchip", "lithium");
+    public static RtgComponent LithiumGenerator = new RtgComponent("generator", "lithium");
+    public static RtgComponent[] HydrogenGeneratorAndChip = new[] { HydrogenGenerator, HydrogenChip };
+    public static RtgComponent[] LithiumGeneratorAndChip = new[] { LithiumGenerator, LithiumChip };
+}
+
 public class SecurityRulesCaseGenerator : IEnumerable<object[]>
 {
     private readonly List<object[]> _data = new List<object[]>
@@ -163,36 +162,42 @@ public class SecurityRulesCaseGenerator : IEnumerable<object[]>
          *  Elevator cannot move the hydrogen generator to the second floor because it'll
          *  fry the lithium chip.
          */
-        new object[] {new[] {TestComponents.HydrogenGenerator},
-                      new[] {TestComponents.LithiumChip},
-                      new[] {TestComponents.HydrogenGenerator},
-                      1,
-                      1,
-                      "Elevator cannot risk a chip in the target floor [Case 1]"
+        new object[]
+        {
+            new[] {TestComponents.HydrogenGenerator},
+            new[] {TestComponents.LithiumChip},
+            new[] {TestComponents.HydrogenGenerator},
+            1,
+            1,
+            "Elevator cannot risk a chip in the target floor [Case 1]"
         },
 
         /*
          *  Elevator can move the hydrogen generator to the second floor because 
          *  the lithium chip will be connected to its own generator.
          */
-          new object[] {TestComponents.HydrogenGeneratorAndChip,
-                        TestComponents.LithiumGeneratorAndChip,
-                        new[] {TestComponents.HydrogenGenerator},
-                        1,
-                        2,
-                        "Elevator should move to the target floor becasue there is a chip connected to its own generator [Case 2]"
+        new object[]
+        {
+            TestComponents.HydrogenGeneratorAndChip,
+            TestComponents.LithiumGeneratorAndChip,
+            new[] {TestComponents.HydrogenGenerator},
+            1,
+            2,
+            "Elevator should move to the target floor becasue there is a chip connected to its own generator [Case 2]"
         },
 
         /*
          *  Elevator can move the hydrogen generator to the second floor because 
          *  there is no chip in that floor.
          */
-          new object[] {new[] {TestComponents.HydrogenGenerator},
-                        new[] {TestComponents.LithiumGenerator},
-                        new[] {TestComponents.HydrogenGenerator},
-                        1,
-                        2,
-                        "Elevator should move to the target floor becasue there is no chip there [Case 3]"
+        new object[] 
+        {
+            new[] {TestComponents.HydrogenGenerator},
+            new[] {TestComponents.LithiumGenerator},
+            new[] {TestComponents.HydrogenGenerator},
+            1,
+            2,
+            "Elevator should move to the target floor becasue there is no chip there [Case 3]"
         },
     };
 
@@ -200,3 +205,4 @@ public class SecurityRulesCaseGenerator : IEnumerable<object[]>
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
+#endregion Auxiliary classes
