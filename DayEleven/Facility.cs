@@ -83,8 +83,8 @@ public class Facility
         return false;
     }
 
-    public object[] GetPossibleActions()
+    public PossibleAction[] GetPossibleActions()
     {
-        return new object[] { };
+        return new PossibleAction[] { };
     }
 }

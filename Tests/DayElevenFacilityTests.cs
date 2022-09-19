@@ -162,6 +162,7 @@ public class DayElevenFacilityTests : IDisposable
         var possibleActions = facility.GetPossibleActions();
         // Then
 
+
     }
 }
 
@@ -277,8 +278,10 @@ public class FacilityStatesCases : IEnumerable<object[]>
                 {3, new Floor()},
                 {4, new Floor()},
             },
-            new[]{TestComponents.HydrogenChip},
-            1,
+            new PossibleAction[]
+            {
+                new PossibleAction(new[]{TestComponents.HydrogenChip}, (int)MoveElevator.Up)
+            },
             "There is a single possible action: load hydrogen chip and move it to the next floor"
         }
     };
