@@ -83,25 +83,6 @@ public class DayElevenFacilityTests : IDisposable
     }
 
     [Fact]
-    public void ElevatorCanMoveComponentToAnotherFloor()
-    {
-        // Given
-        var floors = new Dictionary<int, Floor>{
-            {1, new Floor(TestComponents.HydrogenGeneratorAndChip)},
-            {2, new Floor()},
-            {3, new Floor()},
-            {4, new Floor()},
-        };
-        var facility = new Facility(floors);
-        facility.LoadElevator(new[] { TestComponents.HydrogenGenerator }).Should().BeTrue();
-        // When
-        // Then
-        facility.MoveElevator(1).Should().Be(2);
-        facility.Elevator.CurrentFloor.Should().Be(2);
-        facility.Elevator.Payload.Should().BeEquivalentTo(new[] { TestComponents.HydrogenGenerator });
-    }
-
-    [Fact]
     public void ElevatorIsEmptyAfterAllComponentsAreLoadedIntoElevator()
     {
         // Given
@@ -135,6 +116,8 @@ public class DayElevenFacilityTests : IDisposable
             {3, new Floor()},
             {4, new Floor()},
         };
+        Console.WriteLine($"CheckSecurityRules() Running => {testCaseName}");
+        
         var facility = new Facility(floors);
         facility.LoadElevator(elevatorLoad).Should().BeTrue(testCaseName);
         // When
@@ -190,7 +173,7 @@ public class SecurityRulesCaseGenerator : IEnumerable<object[]>
          *  Elevator can move the hydrogen generator to the second floor because 
          *  there is no chip in that floor.
          */
-        new object[] 
+        new object[]
         {
             new[] {TestComponents.HydrogenGenerator},
             new[] {TestComponents.LithiumGenerator},
@@ -198,6 +181,34 @@ public class SecurityRulesCaseGenerator : IEnumerable<object[]>
             1,
             2,
             "Elevator should move to the target floor becasue there is no chip there [Case 3]"
+        },
+
+        /*
+         *  Elevator can move the hydrogen generator to the second floor because 
+         *  it is empty.
+         */
+        new object[]
+        {
+            TestComponents.HydrogenGeneratorAndChip,
+            new RtgComponent[] { },
+            new[] {TestComponents.HydrogenGenerator},
+            1,
+            2,
+            "Elevator should move to the target floor becasue it is empty [Case 4]"
+        },
+
+        /*
+         *  Elevator can move the hydrogen chip to the second floor because 
+         *  it is and hydrogen generator there.
+         */
+        new object[]
+        {
+            new[] {TestComponents.HydrogenChip},
+            new[] {TestComponents.HydrogenGenerator},
+            new[] {TestComponents.HydrogenChip},
+            1,
+            2,
+            "Elevator should move the chip to the target floor becasue there is a generator of the same material [Case 5]"
         },
     };
 
